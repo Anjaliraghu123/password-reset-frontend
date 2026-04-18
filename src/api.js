@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://password-reset-backend-gt25.onrender.com/api",
 });
 
-//  Named export
 export const forgotPassword = (data) => {
   return API.post("/auth/forgot-password", data);
 };
