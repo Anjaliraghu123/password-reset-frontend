@@ -1,8 +1,22 @@
 import axios from "axios";
 
-const API_URL = "https://password-reset-backend-gt25.onrender.com/api/auth";
+const API = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
 
-export const registerUser = (data) => axios.post(`${API_URL}/register`, data);
-export const loginUser = (data) => axios.post(`${API_URL}/login`, data);
-export const forgotPassword = (data) => axios.post(`${API_URL}/forgot`, data);
-export const resetPassword = (token, data) => axios.post(`${API_URL}/reset/${token}`, data);
+//  Named export
+export const forgotPassword = (data) => {
+  return API.post("/auth/forgot-password", data);
+};
+
+export const loginUser = (data) => {
+  return API.post("/auth/login", data);
+};
+
+export const registerUser = (data) => {
+  return API.post("/auth/register", data);
+};
+
+export const resetPassword = (data) => {
+  return API.post("/auth/reset-password", data);
+};
