@@ -1,6 +1,5 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
@@ -14,57 +13,150 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
+#  Password Reset Backend API
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A secure authentication backend built using **Node.js, Express, and MongoDB**.
+It supports user registration, login, and password reset using token-based authentication.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🌐 render Live API
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+https://password-reset-backend-gt25.onrender.com
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+##  Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* ✅ User Registration
+* ✅ User Login (JWT Token)
+* ✅ Forgot Password (Reset Token Generation)
+* ✅ Reset Password (Token + Expiry Validation)
+* ✅ Password Hashing (bcrypt)
+* ✅ MongoDB Database
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+### 1️⃣ Register
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**POST** `/api/auth/register`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```json
+{
+  "name": "Anjali",
+  "email": "anjali@gmail.com",
+  "password": "123456"
+}
+```
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 2️⃣ Login
 
-### Analyzing the Bundle Size
+**POST** `/api/auth/login`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+###  Forgot Password
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**POST** `/api/auth/forgot-password`
 
-### Deployment
+```json
+{
+  "email": "anjali@gmail.com"
+}
+```
+ Generates reset token (shown in console in development)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+### 4️ Reset Password
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**POST** `/api/auth/reset-password/:token`
+`
+
+---
+
+##  How It Works (Flow)
+
+1. User registers with name, email, password
+2. User logs in and receives JWT token
+3. User clicks "Forgot Password"
+4. Server generates reset token
+5. User opens reset link
+6. User enters new password
+7. Password updated successfully
+
+---
+
+##  Environment Variables
+
+Create `.env` file:
+
+```
+MONGO_URI=your_mongodb_url
+JWT_SECRET=your_secret_key
+CLIENT_URL=http://localhost:3000
+PORT=5000
+```
+
+---
+
+##  Installation
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+##  Tech Stack
+
+* Node.js
+* Express.js
+* MongoDB (Mongoose)
+* JWT (jsonwebtoken)
+* bcryptjs
+* crypto
+
+---
+
+##  Security
+
+* Passwords are hashed using bcrypt
+* JWT used for authentication
+* Reset token is hashed
+* Token expires in 15 minutes
+
+---
+
+##  Author
+
+Anjali Raghu
+
+---
+
+##  Future Improvements
+
+* Email sending using Nodemailer
+* Refresh tokens
+* Role-based authentication
+* React frontend integration
+
+---
+ Backend repo  https://github.com/Anjaliraghu123/password-reset-backend.git
+
+
+  
+Build your project
+npm run build
+
+ This creates a build folder

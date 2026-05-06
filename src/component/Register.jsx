@@ -8,13 +8,41 @@ export default function Register() {
   });
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "email") {
+      setForm({ ...form, email: value.trim() });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    
+    if (!form.name || !form.email || !form.password) {
+      setMessage("All fields are required");
+      return;
+    }
+
+    if (!form.email.includes("@")) {
+      setMessage("Enter valid email");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setMessage("Password must be at least 6 characters");
+      return;
+    }
+
+    if (loading) return;
+    setLoading(true);
 
     try {
       const res = await fetch(
@@ -30,16 +58,35 @@ export default function Register() {
 
       const data = await res.json();
 
+      console.log("STATUS:", res.status);
+      console.log("RESPONSE:", data);
+
       if (!res.ok) {
-        throw new Error(data.message || "Register failed");
+        if (res.status === 400) {
+          setMessage("User already exists");
+        } else {
+          setMessage(data.message || "Register failed");
+        }
+        setLoading(false);
+        return;
       }
 
+      
       setMessage("Registered successfully ");
+
+      
+      setForm({
+        name: "",
+        email: "",
+        password: ""
+      });
 
     } catch (err) {
       console.log(err);
-      setMessage(err.message || "Error");
+      setMessage("Server error ");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -48,46 +95,52 @@ export default function Register() {
         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+
           <input
             name="name"
             type="text"
-            placeholder="Name"
+            placeholder="Enter name"
             value={form.name}
             onChange={handleChange}
             className="w-full p-3 border rounded"
-            required
           />
 
           <input
             name="email"
             type="email"
-            placeholder="Email"
+            placeholder="Enter email"
             value={form.email}
             onChange={handleChange}
             className="w-full p-3 border rounded"
-            required
           />
 
           <input
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="Enter password"
             value={form.password}
             onChange={handleChange}
             className="w-full p-3 border rounded"
-            required
           />
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
+
         </form>
 
         {message && (
-          <p className="mt-4 text-center text-red-500">{message}</p>
+          <p
+            className={`mt-4 text-center ${
+              message.includes("success") ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {message}
+          </p>
         )}
       </div>
     </div>
