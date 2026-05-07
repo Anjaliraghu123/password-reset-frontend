@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -10,22 +13,16 @@ export default function Register() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "email") {
-      setForm({ ...form, email: value.trim() });
-    } else {
-      setForm({ ...form, [name]: value });
-    }
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
   };
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     if (!form.name || !form.email || !form.password) {
       setMessage("All fields are required");
       return;
@@ -41,7 +38,6 @@ export default function Register() {
       return;
     }
 
-    if (loading) return;
     setLoading(true);
 
     try {
@@ -58,32 +54,21 @@ export default function Register() {
 
       const data = await res.json();
 
-      console.log("STATUS:", res.status);
-      console.log("RESPONSE:", data);
-
       if (!res.ok) {
-        if (res.status === 400) {
-          setMessage("User already exists");
-        } else {
-          setMessage(data.message || "Register failed");
-        }
+        setMessage(data.msg || "Registration failed");
         setLoading(false);
         return;
       }
 
-      
-      setMessage("Registered successfully ");
+      setMessage("Account created successfully");
 
-      
-      setForm({
-        name: "",
-        email: "",
-        password: ""
-      });
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
 
     } catch (err) {
       console.log(err);
-      setMessage("Server error ");
+      setMessage("Server error");
     }
 
     setLoading(false);
@@ -91,14 +76,18 @@ export default function Register() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Create Account
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
           <input
-            name="name"
             type="text"
+            name="name"
             placeholder="Enter name"
             value={form.name}
             onChange={handleChange}
@@ -106,8 +95,8 @@ export default function Register() {
           />
 
           <input
-            name="email"
             type="email"
+            name="email"
             placeholder="Enter email"
             value={form.email}
             onChange={handleChange}
@@ -115,8 +104,8 @@ export default function Register() {
           />
 
           <input
-            name="password"
             type="password"
+            name="password"
             placeholder="Enter password"
             value={form.password}
             onChange={handleChange}
@@ -128,20 +117,30 @@ export default function Register() {
             disabled={loading}
             className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600"
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? "Creating..." : "Create Account"}
           </button>
 
         </form>
 
+        <p className="mt-4 text-center">
+          Already have an account?{" "}
+          <Link to="/" className="text-blue-500">
+            Login
+          </Link>
+        </p>
+
         {message && (
           <p
             className={`mt-4 text-center ${
-              message.includes("success") ? "text-green-500" : "text-red-500"
+              message.toLowerCase().includes("success")
+                ? "text-green-500"
+                : "text-red-500"
             }`}
           >
             {message}
           </p>
         )}
+
       </div>
     </div>
   );
